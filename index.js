@@ -12,6 +12,8 @@ io.on("connection", (socket) => {
 
     // send private message to another user given their socket id
     socket.on("private message", (anotherSocketId, msg) => {
+        console.log(msg);
+        console.log(anotherSocketId);
         socket.to(anotherSocketId).emit("private message", socket.id, msg);
     });
 
@@ -24,13 +26,16 @@ io.on("connection", (socket) => {
     });
 
     // tell the client all the sockets and their corresponding user
-    socket.on('get all active sockets', () => {
+    socket.on('get all active sockets', async() => {
+        // socketInstances = await io.fetchSockets();
         let socketInfo = socketInstances.map(item => {
             return {"socket_id": item.id, "user_id": item.user_id}
         })
         console.log(socketInfo)
+        // send to all clients (broadcast)
         io.emit('recieve socket info', socketInfo)
     })
 });
+
 
 io.listen(3000);
