@@ -41,6 +41,14 @@ io.on("connection", (socket) => {
         socket.to(anotherSocketId).emit("private message", socket.id, msg);
     });
 
+    // if the user disconnects, tell all other clients
+    socket.on("disconnect", ()=>{
+        socket.broadcast.emit("user disconnected", {
+            userID: socket.username,
+            socketId: socket.id,
+        })
+    })
+
 });
 
 
