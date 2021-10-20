@@ -2,7 +2,7 @@ const { Server } = require("socket.io");
 
 const io = new Server({
     cors: {
-      origin: "http://localhost:4000",
+      origin: ["http://localhost:4000"],
       methods: ["GET", "POST"]
     }});
 
@@ -20,7 +20,6 @@ io.on("connection", (socket) => {
     // list all users and send them to client
     const users = [];
     for (let [id, socket] of io.of("/").sockets) {
-        console.log(id, socket.username);
         users.push({
         userID: socket.username,
         socketId: id,
@@ -36,8 +35,6 @@ io.on("connection", (socket) => {
 
     // send private message to another user given their socket id
     socket.on("private message", (anotherSocketId, msg) => {
-        console.log(msg);
-        console.log(anotherSocketId);
         socket.to(anotherSocketId).emit("private message", socket.id, msg);
     });
 
