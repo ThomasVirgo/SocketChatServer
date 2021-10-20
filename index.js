@@ -2,7 +2,7 @@ const { Server } = require("socket.io");
 
 const io = new Server({
     cors: {
-      origin: ["http://localhost:4000"],
+      origin: ["http://localhost:4000", "https://virgo-chat.netlify.app"],
       methods: ["GET", "POST"]
     }});
 
