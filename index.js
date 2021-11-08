@@ -17,19 +17,23 @@ io.use((socket, next) => {
 
 io.on("connection", (socket) => {
 
+    console.log('user connected with id: ', socket.id);
     // list all users and send them to client
     const users = [];
     for (let [id, socket] of io.of("/").sockets) {
         users.push({
-        userID: socket.username,
+        email: socket.username,
         socketId: id,
         });
     }
     socket.emit("users", users);
 
-    // tell any other users that you have connected
+    // emit only goes to specific user 
+    // broadcast goes to all other users except the person who sent it 
+
+    // tell any other users that you have connected, so they can add you to their global state.
     socket.broadcast.emit("user connected", {
-        userID: socket.username,
+        email: socket.username,
         socketId: socket.id,
     });
 
@@ -40,12 +44,12 @@ io.on("connection", (socket) => {
 
     // if the user disconnects, tell all other clients
     socket.on("disconnect", ()=>{
+        console.log('user disconnected...');
         socket.broadcast.emit("user disconnected", {
-            userID: socket.username,
+            email: socket.username,
             socketId: socket.id,
         })
     })
-
 });
 
 
